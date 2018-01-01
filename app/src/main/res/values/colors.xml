@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="defaultTextColor">#8a000000</color>
+
+    <color name="Turquoise">#40e0d0</color>
+    <color name="Turquoise2">#00e5ee</color>
+    <color name="Cyan3">#00cdcd</color>
+    <color name="DarkTurquoise">#00ced1</color>
+    <color name="DeepSkyBlue">#00bfff</color>
+    <color name="DeepSkyBlue2">#00b2ee</color>
+</resources>
