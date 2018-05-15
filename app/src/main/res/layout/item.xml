@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -12,47 +10,47 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Tarih" />
+        android:text="@string/tarih" />
 
     <TextView
         android:id="@+id/imsak"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="İmsak" />
+        android:text="@string/imsak" />
 
     <TextView
         android:id="@+id/gunes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Güneş" />
+        android:text="@string/gunes" />
 
     <TextView
         android:id="@+id/ogle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Öğle" />
+        android:text="@string/ogle" />
 
     <TextView
         android:id="@+id/ikindi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="İkindi" />
+        android:text="@string/ikindi" />
 
     <TextView
         android:id="@+id/iftar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="İftar" />
+        android:text="@string/iftar" />
 
     <TextView
         android:id="@+id/yatsi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Yatsı" />
+        android:text="@string/yatsi" />
 </LinearLayout>

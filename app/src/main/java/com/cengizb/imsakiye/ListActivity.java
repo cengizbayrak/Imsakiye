@@ -21,15 +21,15 @@ public class ListActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private RecyclerView recyclerView;
-    private ArrayList<Oruc> oruclar = new ArrayList<>();
+    private final ArrayList<Oruc> oruclar = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        TextView hedef = (TextView) findViewById(R.id.tarih);
-        TextView kalan = (TextView) findViewById(R.id.kalan);
+        recyclerView = findViewById(R.id.recyclerView);
+        TextView hedef = findViewById(R.id.tarih);
+        TextView kalan = findViewById(R.id.kalan);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle("Takvim");
@@ -90,7 +90,7 @@ public class ListActivity extends AppCompatActivity {
         }
     }
 
-    void populate() {
+   private void populate() {
         String json = "";
         try {
             InputStream is = getAssets().open("data.json");
@@ -128,17 +128,5 @@ public class ListActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-
-         /*BufferedReader bufferedReader = null;
-        try {
-            bufferedReader = new BufferedReader(new InputStreamReader(getAssets().open("data.json")));
-            String line;
-            StringBuilder stringBuilder = new StringBuilder();
-            while ((line = bufferedReader.readLine()) != null) {
-                stringBuilder.append(line).append("\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
     }
 }

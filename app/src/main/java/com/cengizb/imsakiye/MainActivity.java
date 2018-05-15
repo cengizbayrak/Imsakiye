@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +14,6 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -43,12 +43,15 @@ public class MainActivity extends AppCompatActivity {
     private TextView ogun;
     private TextView kalan;
 
-    private ArrayList<Oruc> oruclar = new ArrayList<>();
+    private final ArrayList<Oruc> oruclar = new ArrayList<>();
     private Oruc bugunku;
 
+    @SuppressWarnings("unused")
     private final long def_hour = 60 * 60 * 1000;
     private final long def_minute = 60 * 1000;
+    @SuppressWarnings("unused")
     private final long def_second = 1000;
+    @SuppressWarnings("FieldCanBeLocal")
     private final long def_time = 10 * def_minute;
 
     @Override
@@ -56,8 +59,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button list = (Button) findViewById(R.id.list);
-        list.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.list).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, ListActivity.class);
@@ -65,10 +67,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        tarih = (TextView) findViewById(R.id.tarih);
-        gun = (TextView) findViewById(R.id.gun);
-        ogun = (TextView) findViewById(R.id.ogun);
-        kalan = (TextView) findViewById(R.id.kalan);
+        tarih = findViewById(R.id.tarih);
+        gun = findViewById(R.id.gun);
+        ogun = findViewById(R.id.ogun);
+        kalan = findViewById(R.id.kalan);
 
         getData();
         if (represent()) {
@@ -92,12 +94,11 @@ public class MainActivity extends AppCompatActivity {
             InputStream is = getAssets().open("data.json");
             int size = is.available();
             byte[] buffer = new byte[size];
-            is.read(buffer);
             is.close();
             json = new String(buffer, "UTF-8");
         } catch (IOException ex) {
             ex.printStackTrace();
-            Log.e(TAG, "getData: Exception: " + ex.getMessage());
+            Log.e(TAG, "getData: exception: " + ex.getMessage());
         }
         if (!TextUtils.isEmpty(json)) {
             try {
@@ -105,13 +106,13 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < array.length(); i++) {
                     JSONObject object = array.getJSONObject(i);
                     Oruc oruc = new Oruc();
-                    oruc.tarih = object.getString("tarih");
-                    oruc.imsak = object.getString("imsak");
-                    oruc.gunes = object.getString("gunes");
-                    oruc.ogle = object.getString("ogle");
-                    oruc.ikindi = object.getString("ikindi");
-                    oruc.iftar = object.getString("iftar");
-                    oruc.yatsi = object.getString("yatsi");
+                    oruc.tarih = object.getString(part.tarih.value());
+                    oruc.imsak = object.getString(part.imsak.value());
+                    oruc.gunes = object.getString(part.gunes.value());
+                    oruc.ogle = object.getString(part.ogle.value());
+                    oruc.ikindi = object.getString(part.ikindi.value());
+                    oruc.iftar = object.getString(part.iftar.value());
+                    oruc.yatsi = object.getString(part.yatsi.value());
                     oruclar.add(oruc);
                     Date tarih = oruc.getTarih();
                     if (tarih != null) {
@@ -122,12 +123,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                Log.e(TAG, "getData: Exception: " + e.getMessage());
+                Log.e(TAG, "getData: exception: " + e.getMessage());
             }
         }
     }
 
     private boolean represent() {
+        if (bugunku == null)
+            return false;
         Date simdikiZaman = new Date();
         Date hedefTarih = null;
         Date imsak = bugunku.getImsak();
@@ -172,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
                 });
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.e(TAG, "run: Exception: " + e.getMessage());
+                Log.e(TAG, "run: exception: " + e.getMessage());
             }
 
             final long differ = hedefTarih.getTime() - simdikiZaman.getTime();
@@ -189,14 +192,14 @@ public class MainActivity extends AppCompatActivity {
                 dakika = "0" + dakika;
             }
             String saniye = String.valueOf(second);
-            if (saniye.length() == 1) {
+            if (saniye.length() == 1)
                 saniye = "0" + saniye;
-            }
             final String yazi = saat + ":" + dakika + ":" + saniye;
             MainActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     kalan.setText(yazi);
+                    //noinspection ConstantConditions
                     boolean uyar = (hour < 1 && minute > 0) || (hour < 1 && minute < 1 && second > 0);
                     if (uyar) {
                         kalan.setTextColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_red_light));
@@ -212,29 +215,47 @@ public class MainActivity extends AppCompatActivity {
                 PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
                 CharSequence message = hedefOgun + "'a " + String.valueOf(minute) + " dakika kaldı";
                 CharSequence summary = hedefOgun + " zamanı";
-                android.support.v4.app.NotificationCompat.BigTextStyle bigTextStyle = new android.support.v4.app.NotificationCompat.BigTextStyle();
-                bigTextStyle.bigText(message);
-                bigTextStyle.setSummaryText(summary);
-                android.support.v4.app.NotificationCompat.Builder builder = new android.support.v4.app.NotificationCompat.Builder(getApplicationContext())
+                NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle()
+                        .bigText(message)
+                        .setSummaryText(summary);
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "imsakiye")
                         .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.ic_launcher))
                         .setSmallIcon((Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) ? R.mipmap.ic_launcher : R.mipmap.ic_launcher)
                         .setColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary))
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                         .setAutoCancel(true)
-                        .setPriority(android.support.v4.app.NotificationCompat.PRIORITY_MAX)
+                        .setPriority(NotificationCompat.PRIORITY_MAX)
                         .setContentTitle(getApplicationContext().getString(R.string.app_name))
                         .setContentText(message)
                         .setContentIntent(pendingIntent)
                         .setDeleteIntent(null)
                         .setStyle(bigTextStyle);
-                builder.build().flags |= android.support.v4.app.NotificationCompat.FLAG_AUTO_CANCEL;
-                NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(getApplicationContext());
-                notificationManagerCompat.notify(
-                        1000,
-                        builder.build());
+                builder.build().flags |= NotificationCompat.FLAG_AUTO_CANCEL;
+                NotificationManagerCompat.from(getApplicationContext())
+                        .notify(1000, builder.build());
             }
             return true;
         }
         return false;
+    }
+
+    private enum part {
+        tarih("tarih"),
+        imsak("imsak"),
+        gunes("gunes"),
+        ogle("ogle"),
+        ikindi("ikindi"),
+        iftar("iftar"),
+        yatsi("yatsi");
+
+        final String _value;
+
+        part(String value) {
+            this._value = value;
+        }
+
+        String value() {
+            return this._value;
+        }
     }
 }

@@ -17,9 +17,9 @@ import java.util.Locale;
 class Oruc {
     private static final String TAG = "Oruc";
 
-    private static Locale locale = new Locale("tr", "TR");
-    private static String pattern = "dd.MM.yyyy";
-    private static SimpleDateFormat formatter = new SimpleDateFormat(pattern, locale);
+    private static final Locale locale = new Locale("tr", "TR");
+    private static final String pattern = "dd.MM.yyyy";
+    private static final SimpleDateFormat formatter = new SimpleDateFormat(pattern, locale);
 
     String tarih;
     String imsak;

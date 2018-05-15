@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">İmsakiye</string>
+    <string name="tarih">Tarih</string>
+    <string name="imsak">İmsak</string>
+    <string name="gunes">Güneş</string>
+    <string name="ogle">Öğle</string>
+    <string name="ikindi">İkindi</string>
+    <string name="iftar">İftar</string>
+    <string name="yatsi">Yatsı</string>
+    <string name="hedef_tarih">Hedef tarih</string>
+    <string name="gun">Gün</string>
+    <string name="ogun">Öğün</string>
+    <string name="kalan_sure">Kalan süre</string>
+    <string name="takvim">TAKVİM</string>
 </resources>
