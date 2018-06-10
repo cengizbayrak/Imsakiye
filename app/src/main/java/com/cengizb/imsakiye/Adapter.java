@@ -3,17 +3,21 @@ package com.cengizb.imsakiye;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Cengiz Bayrak on 26.05.2017.
@@ -34,7 +38,9 @@ public class Adapter extends RecyclerView.Adapter<Adapter.Holder> {
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        return new Holder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item, viewGroup, false));
+        LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
+        View view = layoutInflater.inflate(R.layout.item, viewGroup, false);
+        return new Holder(view);
     }
 
     @Override
@@ -56,20 +62,23 @@ public class Adapter extends RecyclerView.Adapter<Adapter.Holder> {
                 holder.tarih.setText(String.format("%s.%s", parts[0], parts[1]));
             }
         }
-        Date tarih = oruc.getTarih();
+        Date tarih = oruc.tarih();
+
+        final int textColor = new TextView(context).getCurrentTextColor();
+        int background = ContextCompat.getColor(context, R.color.white);
+        int text = textColor;
         if (tarih != null && DateUtils.isToday(tarih.getTime())) {
-            int green = ContextCompat.getColor(context, R.color.colorAccent);
-            int white = ContextCompat.getColor(context, android.R.color.white);
-            holder.itemView.setBackgroundColor(green);
-            holder.tarih.setTextColor(white);
-            holder.imsak.setTextColor(white);
-            holder.gunes.setTextColor(white);
-            holder.ogle.setTextColor(white);
-            holder.ikindi.setTextColor(white);
-            holder.iftar.setTextColor(white);
-            holder.yatsi.setTextColor(white);
-            active = i;
+            text = background;
+            background = ContextCompat.getColor(context, R.color.colorAccent);
         }
+        holder.itemView.setBackgroundColor(background);
+        holder.tarih.setTextColor(text);
+        holder.imsak.setTextColor(text);
+        holder.gunes.setTextColor(text);
+        holder.ogle.setTextColor(text);
+        holder.ikindi.setTextColor(text);
+        holder.iftar.setTextColor(text);
+        holder.yatsi.setTextColor(text);
     }
 
     @Override
@@ -77,14 +86,18 @@ public class Adapter extends RecyclerView.Adapter<Adapter.Holder> {
         return oruclar.size();
     }
 
-    private int active = 0;
-
-    int active() {
-        return active;
+    int today() {
+        Date date;
+        for (Oruc oruc : oruclar) {
+            if ((date = oruc.tarih()) != null && DateUtils.isToday(date.getTime())) {
+                return oruclar.indexOf(oruc);
+            }
+        }
+        return 0;
     }
 
-    class Holder extends RecyclerView.ViewHolder {
-       final TextView tarih, imsak, gunes, ogle, ikindi, iftar, yatsi;
+    class Holder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        final TextView tarih, imsak, gunes, ogle, ikindi, iftar, yatsi;
 
         Holder(View itemView) {
             super(itemView);
@@ -96,6 +109,18 @@ public class Adapter extends RecyclerView.Adapter<Adapter.Holder> {
             ikindi = itemView.findViewById(R.id.ikindi);
             iftar = itemView.findViewById(R.id.iftar);
             yatsi = itemView.findViewById(R.id.yatsi);
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            final Oruc oruc = oruclar.get(getAdapterPosition());
+            int index = oruclar.indexOf(oruc) + 1;
+            Locale l = Util.locale();
+            final String format = String.format(l, "%d. gün - %s", index, oruc.tarih);
+            Snackbar.make(view, format, Snackbar.LENGTH_LONG).show();
+            Toast.makeText(context, oruc.toString(), Toast.LENGTH_LONG).show();
         }
     }
 }

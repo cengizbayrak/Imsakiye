@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -27,6 +28,7 @@ public class ListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+
         recyclerView = findViewById(R.id.recyclerView);
         TextView hedef = findViewById(R.id.tarih);
         TextView kalan = findViewById(R.id.kalan);
@@ -90,43 +92,55 @@ public class ListActivity extends AppCompatActivity {
         }
     }
 
-   private void populate() {
+    private void populate() {
         String json = "";
         try {
             InputStream is = getAssets().open("data.json");
             int size = is.available();
             byte[] buffer = new byte[size];
-            is.read(buffer);
+            int read = is.read(buffer);
+            Log.d(TAG, "populate: read buffer: " + String.valueOf(read));
             is.close();
             json = new String(buffer, "UTF-8");
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(TAG, "populate: exception: " + e.getMessage());
         }
-        if (!TextUtils.isEmpty(json)) {
-            try {
-                JSONArray array = new JSONArray(json);
-                ArrayList<Oruc> oruclar = new ArrayList<>();
-                for (int i = 0; i < array.length(); i++) {
-                    JSONObject object = array.getJSONObject(i);
-                    Oruc oruc = new Oruc();
-                    oruc.tarih = object.getString("tarih");
-                    oruc.imsak = object.getString("imsak");
-                    oruc.gunes = object.getString("gunes");
-                    oruc.ogle = object.getString("ogle");
-                    oruc.ikindi = object.getString("ikindi");
-                    oruc.iftar = object.getString("iftar");
-                    oruc.yatsi = object.getString("yatsi");
-                    oruclar.add(oruc);
-                }
 
-                Adapter adapter = new Adapter(ListActivity.this, oruclar);
-                StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-                recyclerView.setAdapter(adapter);
-                recyclerView.setLayoutManager(layoutManager);
-                recyclerView.smoothScrollToPosition(adapter.active());
-            } catch (JSONException e) {
-                e.printStackTrace();
+        if (TextUtils.isEmpty(json))
+            return;
+
+        try {
+            JSONArray array = new JSONArray(json);
+            ArrayList<Oruc> oruclar = new ArrayList<>();
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject object = array.getJSONObject(i);
+                Oruc oruc = new Oruc();
+                oruc.tarih = object.getString("tarih");
+                oruc.imsak = object.getString("imsak");
+                oruc.gunes = object.getString("gunes");
+                oruc.ogle = object.getString("ogle");
+                oruc.ikindi = object.getString("ikindi");
+                oruc.iftar = object.getString("iftar");
+                oruc.yatsi = object.getString("yatsi");
+                oruclar.add(oruc);
             }
+
+            final Adapter adapter = new Adapter(ListActivity.this, oruclar);
+            int spanCount = 1;
+            int orientation = StaggeredGridLayoutManager.VERTICAL;
+            StaggeredGridLayoutManager lm = new StaggeredGridLayoutManager(spanCount, orientation);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(lm);
+            recyclerView.post(new Runnable() {
+                @Override
+                public void run() {
+                    recyclerView.smoothScrollToPosition(adapter.today());
+                }
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e(TAG, "populate: exception: " + e.getMessage());
         }
     }
 }

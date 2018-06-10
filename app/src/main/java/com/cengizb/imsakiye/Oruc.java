@@ -30,51 +30,66 @@ class Oruc {
     String yatsi;
 
     @Nullable
-    Date getTarih() {
+    Date tarih() {
         try {
-            return formatter.parse(this.tarih);
+            return formatter.parse(tarih);
         } catch (ParseException e) {
             e.printStackTrace();
-            Log.e(TAG, "getTarih: Exception: " + e.getMessage());
+            Log.e(TAG, "tarih: exception: " + e.getMessage());
         }
         return null;
     }
 
     @Nullable
-    Date getImsak() {
+    Date imsak() {
         try {
-            Date tarih = formatter.parse(this.tarih);
-            Calendar imsak = Calendar.getInstance();
-            imsak.setTime(tarih);
-            String[] parts = this.imsak.split(":");
+            Date date = formatter.parse(tarih);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            String[] parts = imsak.split(":");
             int hour = Integer.parseInt(parts[0]);
             int minute = Integer.parseInt(parts[1]);
-            imsak.set(Calendar.HOUR_OF_DAY, hour);
-            imsak.set(Calendar.MINUTE, minute);
-            return imsak.getTime();
+            calendar.set(Calendar.HOUR_OF_DAY, hour);
+            calendar.set(Calendar.MINUTE, minute);
+            return calendar.getTime();
         } catch (ParseException e) {
             e.printStackTrace();
-            Log.e(TAG, "getImsak: Exception: " + e.getMessage());
+            Log.e(TAG, "imsak: exception: " + e.getMessage());
         }
         return null;
     }
 
     @Nullable
-    Date getIftar() {
+    Date iftar() {
         try {
-            Date tarih = formatter.parse(this.tarih);
-            Calendar iftar = Calendar.getInstance();
-            iftar.setTime(tarih);
-            String[] parts = this.iftar.split(":");
+            Date date = formatter.parse(tarih);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            String[] parts = iftar.split(":");
             int hour = Integer.parseInt(parts[0]);
             int minute = Integer.parseInt(parts[1]);
-            iftar.set(Calendar.HOUR_OF_DAY, hour);
-            iftar.set(Calendar.MINUTE, minute);
-            return iftar.getTime();
+            calendar.set(Calendar.HOUR_OF_DAY, hour);
+            calendar.set(Calendar.MINUTE, minute);
+            return calendar.getTime();
         } catch (ParseException e) {
             e.printStackTrace();
-            Log.e(TAG, "getIftar: Exception: " + e.getMessage());
+            Log.e(TAG, "iftar: exception: " + e.getMessage());
         }
         return null;
+    }
+
+    @Override
+    public String toString() {
+        final String format = "Object: %d {\n" +
+                "\tTarih: %s\n" +
+                "\tİmsak: %s\n" +
+                "\tGüneş: %s\n" +
+                "\tÖğle: %s\n" +
+                "\tİkindi: %s\n" +
+                "\tİftar: %s\n" +
+                "\tYatsı: %s\n" + "}";
+        Locale l = Util.locale();
+        int hash = hashCode();
+        return String.format(l, format, hash, tarih, imsak, gunes, ogle, ikindi, iftar, yatsi);
     }
 }
