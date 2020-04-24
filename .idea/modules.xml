@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/AndroidStudioProjects-Imsakiye.iml" filepath="$PROJECT_DIR$/AndroidStudioProjects-Imsakiye.iml" group="Imsakiye" />
       <module fileurl="file://$PROJECT_DIR$/Imsakiye.iml" filepath="$PROJECT_DIR$/Imsakiye.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/Imsakiye-app.iml" filepath="$PROJECT_DIR$/app/Imsakiye-app.iml" group="Imsakiye/app" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
