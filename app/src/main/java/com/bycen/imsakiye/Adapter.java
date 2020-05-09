@@ -2,11 +2,18 @@ package com.bycen.imsakiye;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+<<<<<<< HEAD:app/src/main/java/com/bycen/imsakiye/Adapter.java
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+=======
+import androidx.annotation.NonNull;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+>>>>>>> d669d036e046e1901f5a2f5a2b22fc03bf252ba7:app/src/main/java/com/cengizb/imsakiye/Adapter.java
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
